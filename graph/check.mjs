@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { renders } from './render.mjs';
 
 const root = join(import.meta.dirname, '..');
 const readJson = (path) => JSON.parse(readFileSync(join(root, path), 'utf8'));
@@ -200,6 +201,13 @@ function checkFindings() {
   };
 }
 
+function checkRenders() {
+  const v = Object.entries(renders())
+    .filter(([name, text]) => !existsSync(join(root, 'graph', name)) || readFileSync(join(root, 'graph', name), 'utf8') !== text)
+    .map(([name]) => `graph/${name} is stale; run node graph/render.mjs`);
+  return { v, counts: `${Object.keys(renders()).length} rendered files` };
+}
+
 const checks = {
   'row keys match node writes': checkKeys,
   'outcome follows the decision table': checkOutcomes,
@@ -209,6 +217,7 @@ const checks = {
   'findings meet their expect': checkExpect,
   'every claim is cited': checkClaims,
   'every finding bears on a hypothesis': checkFindings,
+  'rendered Markdown is current': checkRenders,
 };
 
 let failed = 0;
