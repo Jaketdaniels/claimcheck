@@ -63,4 +63,4 @@ Outcome (derived from verdict.status x heldout.passed)
 ## Non-goals
 
 No framework, no dependencies beyond Node built-ins, no model other than via `claude -p`.
-Three tasks now, shaped so a fourth is a directory copy.
+Five tasks now, shaped so a sixth is a directory copy.

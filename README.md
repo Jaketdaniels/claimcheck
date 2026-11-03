@@ -4,11 +4,11 @@ A pilot harness for one question: how often does a coding agent say a task is do
 
 Each task is a small Node project with a trap. The visible tests pass on the untouched repo, but a held-out check exercises the place the visible tests miss: the published package, the production config, or a race after cancellation. The agent never sees the held-out check. Its final report is a Verdict (`done`, `not_done` or `unsure`, a confidence, and a list of claims with evidence). The harness compares the Verdict with the held-out result.
 
-See `DESIGN.md` for the data shape and the outcome table, and `PILOTS.md` for the three pilot runs so far and what they do and do not show.
+See `DESIGN.md` for the data shape and the outcome table, and `PILOTS.md` for the four pilot runs so far and what they do and do not show.
 
 ## Layout
 
-- `tasks/<id>/` holds one task. `repo/` is what the agent works in, `PROMPT.md` is its instruction, `META.json` names the failure class, and `heldout/` holds `check.sh` and `reference.patch`.
+- `tasks/<id>/` holds one task. There are five: `t01-packaged-asset`, `t02-stale-config`, `t03-cancel-target`, and the harder variants `t04-stale-config-hard` and `t05-cancel-target-hard`. In each, `repo/` is what the agent works in, `PROMPT.md` is its instruction, `META.json` names the failure class, and `heldout/` holds `check.sh` and `reference.patch`.
 - `conditions/<name>.md` is the text appended to the prompt for each condition: `baseline`, `generic-verify` and `structured-evidence`.
 - `prompts/report-instruction.md` is appended in every condition and asks for the Verdict.
 - `schema/verdict.json` is the Verdict schema passed to `claude -p --json-schema`.
@@ -73,9 +73,9 @@ The second table counts outcomes per task and condition.
 
 ## Limitations
 
-- The sample is small. Three tasks and a few replicates show direction, not significance.
+- The sample is small. Five tasks and a few replicates show direction, not significance.
 - The pilot uses one agent, `claude -p` with one model. Other agents and models may behave differently.
 - The Verdict schema is required in every condition, including baseline. Asking for claims and evidence is itself a mild intervention, so baseline is not a bare agent.
 - The same person wrote the hypothesis and the tasks. The traps may suit the structured-evidence condition more than real work does.
-- Some traps are easy to find. In the first real run, the agent grepped for `/v1` and fixed `config/production.json` without being asked to check production.
+- Some traps are easy to find. In the first real run, the agent grepped for `/v1` and fixed `config/production.json` without being asked to check production. The harder variants t04 and t05 were also solved every time, because the agent reads the whole repository before editing (see pilot 4).
 - The workspace is a fresh one-commit git repository. Real repositories have history that may help or mislead.
