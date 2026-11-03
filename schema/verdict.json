@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "confidence", "evidence"],
+  "properties": {
+    "status": { "type": "string", "enum": ["done", "not_done", "unsure"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim", "command", "observed"],
+        "properties": {
+          "claim": { "type": "string" },
+          "command": { "type": "string" },
+          "observed": { "type": "string" }
+        }
+      }
+    }
+  }
+}
