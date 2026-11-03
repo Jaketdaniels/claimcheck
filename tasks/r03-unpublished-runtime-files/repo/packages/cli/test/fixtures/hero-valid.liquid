@@ -1,0 +1,53 @@
+<section class="sk-hero" style="--sk-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};">
+  <div class="sk-hero__inner">
+    <h2 class="sk-hero__heading" style="color: {{ section.settings.heading_color }};">
+      {{ section.settings.heading }}
+    </h2>
+    {% if section.settings.cta_label != blank %}
+      <a class="sk-hero__cta" href="{{ section.settings.cta_link | default: '#' }}">
+        {{ section.settings.cta_label }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Fixture hero",
+  "settings": [
+    { "id": "heading", "type": "text", "label": "Heading", "default": "A headline that earns its size" },
+    {
+      "id": "heading_size_desktop",
+      "type": "range",
+      "label": "Heading size (desktop)",
+      "min": 32,
+      "max": 96,
+      "step": 4,
+      "default": 64
+    },
+    { "id": "heading_color", "type": "color", "label": "Heading color", "default": "#f5f2ec" },
+    { "id": "cta_label", "type": "text", "label": "Button label", "default": "Shop now" },
+    { "id": "cta_link", "type": "url", "label": "Button link" },
+    {
+      "id": "overlay_opacity",
+      "type": "range",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "id": "text_align",
+      "type": "select",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    }
+  ],
+  "presets": [{ "name": "Fixture hero" }]
+}
+{% endschema %}

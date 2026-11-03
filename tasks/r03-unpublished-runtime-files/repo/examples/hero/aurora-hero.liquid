@@ -1,0 +1,128 @@
+{%- comment -%} Aurora Hero — scaffolded by sectionkit. Implement content, keep the schema bounds. {%- endcomment -%}
+{% style %}
+  #sk-aurora-hero-{{ section.id }} {
+    position: relative;
+    display: grid;
+    align-content: center;
+    min-height: 60vh;
+    padding: 4rem 1.5rem;
+    background: #101014;
+  }
+  #sk-aurora-hero-{{ section.id }} .sk-hero__media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  #sk-aurora-hero-{{ section.id }} .sk-hero__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }});
+  }
+  #sk-aurora-hero-{{ section.id }} .sk-hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #sk-aurora-hero-{{ section.id }} .sk-hero__inner {
+    position: relative;
+    max-width: 44rem;
+  }
+  #sk-aurora-hero-{{ section.id }} .sk-hero__heading {
+    margin: 0 0 1rem;
+    color: {{ section.settings.heading_color }};
+    font-size: {{ section.settings.heading_size_mobile }}px;
+    line-height: 1.05;
+  }
+  #sk-aurora-hero-{{ section.id }} .sk-hero__cta {
+    display: inline-block;
+    padding: 0.85rem 1.75rem;
+    border: 1px solid currentColor;
+    color: {{ section.settings.heading_color }};
+    text-decoration: none;
+  }
+  @media screen and (min-width: 750px) {
+    #sk-aurora-hero-{{ section.id }} .sk-hero__heading {
+      font-size: {{ section.settings.heading_size_desktop }}px;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    #sk-aurora-hero-{{ section.id }} .sk-hero__inner {
+      animation: sk-aurora-hero-reveal 0.5s ease-out both;
+    }
+    @keyframes sk-aurora-hero-reveal {
+      from {
+        opacity: 0;
+        transform: translateY(1rem);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+{% endstyle %}
+
+<section id="sk-aurora-hero-{{ section.id }}" class="sk-hero">
+  {%- if section.settings.background_image != blank -%}
+    <div class="sk-hero__media">
+      {{
+        section.settings.background_image
+        | image_url: width: 2400
+        | image_tag: loading: 'eager', widths: '750, 1200, 1800, 2400', alt: ''
+      }}
+    </div>
+  {%- endif -%}
+  <div class="sk-hero__inner">
+    <h2 class="sk-hero__heading">{{ section.settings.heading }}</h2>
+    {%- if section.settings.cta_label != blank -%}
+      <a class="sk-hero__cta" href="{{ section.settings.cta_link | default: '#' }}">
+        {{ section.settings.cta_label }}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Aurora Hero",
+  "settings": [
+    { "id": "heading", "type": "text", "label": "Heading", "default": "Made to move you" },
+    {
+      "id": "heading_size_desktop",
+      "type": "range",
+      "label": "Heading size (desktop)",
+      "min": 32,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "id": "heading_size_mobile",
+      "type": "range",
+      "label": "Heading size (mobile)",
+      "min": 24,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    { "id": "heading_color", "type": "color", "label": "Text color", "default": "#f5f2ec" },
+    { "id": "cta_label", "type": "text", "label": "Button label", "default": "Shop now" },
+    { "id": "cta_link", "type": "url", "label": "Button link" },
+    { "id": "background_image", "type": "image_picker", "label": "Background image" },
+    {
+      "id": "overlay_opacity",
+      "type": "range",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    }
+  ],
+  "presets": [{ "name": "Aurora Hero" }]
+}
+{% endschema %}

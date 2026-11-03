@@ -1,0 +1,14 @@
+{
+  "name": "sectionkit",
+  "owner": {
+    "name": "Jesse Nguyen",
+    "url": "https://github.com/jessebldr"
+  },
+  "plugins": [
+    {
+      "name": "sectionkit",
+      "source": "./skills/sectionkit",
+      "description": "Build Shopify OS 2.0 sections & blocks from a brief: Section Spec, scaffold, lint, preview."
+    }
+  ]
+}

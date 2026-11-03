@@ -1,0 +1,233 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/jessebldr/sectionkit/main/spec/section-spec.schema.json",
+  "title": "SectionKit Section Spec",
+  "description": "The YAML intermediate document capturing a section's intent before any Liquid exists. V0.1 tracer: hero-relevant fields only.",
+  "type": "object",
+  "required": [
+    "meta",
+    "source",
+    "design_read",
+    "commerce_intent",
+    "content",
+    "accessibility",
+    "motion",
+    "assumptions",
+    "open_questions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["name", "slug", "family", "target", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,63}$",
+          "description": "Kebab-case, immutable, and the only string allowed to name output files."
+        },
+        "family": {
+          "enum": [
+            "hero",
+            "image-with-text",
+            "feature-grid",
+            "faq",
+            "comparison"
+          ]
+        },
+        "target": { "enum": ["section", "block"] },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["brief"],
+      "additionalProperties": false,
+      "properties": {
+        "brief": { "type": "string", "minLength": 1 },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "context": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "theme": { "type": "string" },
+            "brand_colors": {
+              "type": "array",
+              "items": { "type": "string", "pattern": "^#[0-9a-fA-F]{3,8}$" }
+            }
+          }
+        }
+      }
+    },
+    "design_read": {
+      "type": "string",
+      "minLength": 1,
+      "description": "One-line declared aesthetic direction, written before any code."
+    },
+    "commerce_intent": {
+      "type": "object",
+      "required": ["purpose", "buy_path"],
+      "additionalProperties": false,
+      "properties": {
+        "purpose": { "enum": ["promote", "navigate", "inform", "convert"] },
+        "buy_path": {
+          "enum": ["none", "cta_link", "product", "collection"],
+          "description": "\"none\" is legal but must be an explicit decision, never an omission."
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "required": ["hierarchy", "settings"],
+      "additionalProperties": false,
+      "properties": {
+        "hierarchy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role", "required"],
+            "additionalProperties": false,
+            "properties": {
+              "role": {
+                "enum": ["eyebrow", "heading", "body", "cta", "media", "item"]
+              },
+              "required": { "type": "boolean" }
+            }
+          }
+        },
+        "settings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$" },
+              "type": {
+                "enum": [
+                  "text",
+                  "textarea",
+                  "richtext",
+                  "url",
+                  "range",
+                  "select",
+                  "color",
+                  "checkbox",
+                  "image_picker"
+                ]
+              },
+              "label": { "type": "string" },
+              "default": {},
+              "options": { "type": "array", "items": { "type": "string" } },
+              "bounds": {
+                "type": "object",
+                "required": ["min", "max", "step"],
+                "additionalProperties": false,
+                "properties": {
+                  "min": { "type": "number" },
+                  "max": { "type": "number" },
+                  "step": { "type": "number", "exclusiveMinimum": 0 }
+                }
+              }
+            },
+            "if": { "properties": { "type": { "const": "range" } } },
+            "then": { "required": ["id", "type", "bounds"] }
+          }
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type"],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+              },
+              "max": { "type": "integer", "minimum": 1 },
+              "nestable": { "type": "boolean" },
+              "settings": { "type": "array" }
+            }
+          }
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "container": { "enum": ["full-bleed", "contained"] },
+        "responsive": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mobile_first": { "type": "boolean" },
+            "breakpoints": { "type": "array", "items": { "type": "integer" } }
+          }
+        }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "posture": { "enum": ["inherit", "shopify_font_picker"] },
+        "scale": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "heading_desktop": { "type": "number" },
+            "heading_mobile": { "type": "number" }
+          }
+        }
+      }
+    },
+    "background": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "types_exposed": {
+          "type": "array",
+          "items": { "enum": ["scheme", "solid", "image", "gradient"] }
+        }
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "required": ["reduced_motion"],
+      "additionalProperties": false,
+      "properties": {
+        "reduced_motion": { "const": "required" },
+        "contrast_notes": { "type": "string" }
+      }
+    },
+    "motion": {
+      "type": "object",
+      "required": ["allowed", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "allowed": { "type": "boolean" },
+        "kind": { "enum": ["none", "css-reveal", "css-hover"] },
+        "triggers": {
+          "type": "array",
+          "items": { "enum": ["load", "viewport"] }
+        },
+        "duration": { "enum": ["fast", "base", "slow", "deliberate"] },
+        "easing": { "enum": ["ease-out", "ease-in-out", "spring-soft"] }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "image_policy": { "type": "string" },
+        "js_budget_kb": { "type": "number", "minimum": 0 }
+      }
+    },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "open_questions": { "type": "array", "items": { "type": "string" } }
+  }
+}

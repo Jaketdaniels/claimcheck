@@ -1,0 +1,17 @@
+{
+  "failureClass": "unpublished-runtime-file",
+  "version": 1,
+  "source": {
+    "repo": "jessebldr/sectionkit",
+    "commit": "b2ee52c7",
+    "issue": "https://github.com/jessebldr/sectionkit/issues/1",
+    "promptIssue": "https://github.com/jessebldr/sectionkit/issues/35",
+    "fixCommit": "e9ace686",
+    "promptFixCommit": "53c9e15e",
+    "licence": "MIT"
+  },
+  "adaptations": [
+    "package.json gains a pretest script that runs npm install when node_modules is missing, so validate-tasks.mjs can run the suite in an uninstalled copy",
+    "packages/cli/test/naming.test.mjs removed: it runs git ls-files, and validate-tasks.mjs copies repo/ into a directory that is not a git repository"
+  ]
+}

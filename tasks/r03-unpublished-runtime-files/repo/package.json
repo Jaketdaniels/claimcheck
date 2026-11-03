@@ -1,0 +1,48 @@
+{
+  "name": "sectionkit",
+  "version": "0.0.0",
+  "description": "Quality + taste kit for AI-built Shopify sections & blocks: spec, scaffold, linters, motion tokens.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Jesse Nguyen",
+  "bin": {
+    "sectionkit": "packages/cli/bin.js",
+    "sk": "packages/cli/bin.js"
+  },
+  "files": [
+    "packages/cli",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
+    "pretest": "[ -d node_modules ] || npm install --no-audit --no-fund",
+    "test": "node --test",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jessebldr/sectionkit.git"
+  },
+  "keywords": [
+    "shopify",
+    "liquid",
+    "sections",
+    "theme-blocks",
+    "agent-skills",
+    "lint"
+  ],
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
+    "prettier": "^3.9.5"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "yaml": "^2.9.0"
+  }
+}

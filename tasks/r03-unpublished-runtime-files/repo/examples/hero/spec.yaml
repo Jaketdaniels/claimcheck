@@ -1,0 +1,76 @@
+# section-spec/v0.1
+meta:
+  name: Aurora Hero
+  slug: aurora-hero
+  family: hero
+  target: section
+  version: 0.1.0
+
+source:
+  brief: >-
+    Full-bleed hero with a large headline, short supporting line, one CTA,
+    dark background image, editorial feel.
+
+design_read: >-
+  Editorial and confident — oversized serif-leaning headline on a dark image,
+  generous whitespace, a single quiet CTA.
+
+commerce_intent:
+  purpose: convert
+  buy_path: cta_link
+
+content:
+  hierarchy:
+    - { role: eyebrow, required: false }
+    - { role: heading, required: true }
+    - { role: body, required: false }
+    - { role: cta, required: true }
+    - { role: media, required: true }
+  settings:
+    - { id: heading, type: text, default: "Made to move you" }
+    - id: heading_size_desktop
+      type: range
+      default: 64
+      bounds: { min: 32, max: 96, step: 4 }
+    - id: heading_size_mobile
+      type: range
+      default: 40
+      bounds: { min: 24, max: 64, step: 4 }
+    - { id: cta_label, type: text, default: "Shop now" }
+    - { id: cta_link, type: url }
+    - id: overlay_opacity
+      type: range
+      default: 40
+      bounds: { min: 0, max: 80, step: 5 }
+  blocks: []
+
+layout:
+  container: full-bleed
+  responsive: { mobile_first: true, breakpoints: [750] }
+
+typography:
+  posture: shopify_font_picker
+  scale: { heading_desktop: 64, heading_mobile: 40 }
+
+background:
+  types_exposed: [image, solid]
+
+accessibility:
+  reduced_motion: required
+  contrast_notes: Overlay keeps text at 4.5:1 or better over the image.
+
+motion:
+  allowed: true
+  kind: css-reveal
+  triggers: [viewport]
+  duration: base
+  easing: ease-out
+
+performance:
+  image_policy: hero image eager with explicit width/height
+  js_budget_kb: 0
+
+assumptions:
+  - Single CTA only
+  - Default overlay is black at 40%
+open_questions: []

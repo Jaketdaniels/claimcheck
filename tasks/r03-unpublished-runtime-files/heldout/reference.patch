@@ -1,0 +1,121 @@
+diff --git a/spec/.gitkeep b/packages/cli/spec/.gitkeep
+similarity index 100%
+rename from spec/.gitkeep
+rename to packages/cli/spec/.gitkeep
+diff --git a/spec/section-spec.schema.json b/packages/cli/spec/section-spec.schema.json
+similarity index 99%
+rename from spec/section-spec.schema.json
+rename to packages/cli/spec/section-spec.schema.json
+index 3dd8e62..5cfa753 100644
+--- a/spec/section-spec.schema.json
++++ b/packages/cli/spec/section-spec.schema.json
+@@ -1,6 +1,6 @@
+ {
+   "$schema": "http://json-schema.org/draft-07/schema#",
+-  "$id": "https://raw.githubusercontent.com/jessebldr/sectionkit/main/spec/section-spec.schema.json",
++  "$id": "https://raw.githubusercontent.com/jessebldr/sectionkit/main/packages/cli/spec/section-spec.schema.json",
+   "title": "SectionKit Section Spec",
+   "description": "The YAML intermediate document capturing a section's intent before any Liquid exists. V0.1 tracer: hero-relevant fields only.",
+   "type": "object",
+diff --git a/packages/cli/src/commands/scaffold.js b/packages/cli/src/commands/scaffold.js
+index 733581e..1eac0e1 100644
+--- a/packages/cli/src/commands/scaffold.js
++++ b/packages/cli/src/commands/scaffold.js
+@@ -1,14 +1,13 @@
+-import { readFileSync, writeFileSync, existsSync } from "node:fs";
++import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+ import { fileURLToPath } from "node:url";
+ import { dirname, join } from "node:path";
+ import { loadSpec } from "../lib/spec-loader.js";
+ 
++// Inside packages/cli/ so the npm `files` whitelist ships it (issue #1).
+ const templatesDir = join(
+   dirname(fileURLToPath(import.meta.url)),
+   "..",
+   "..",
+-  "..",
+-  "..",
+   "templates"
+ );
+ 
+@@ -45,7 +44,9 @@ export function scaffoldCommand(argv) {
+   const output = readFileSync(template, "utf8")
+     .replaceAll("__SK_NAME__", spec.meta.name)
+     .replaceAll("__SK_SLUG__", spec.meta.slug);
+-  const outPath = join(outDir ?? dirname(specFile), `${spec.meta.slug}.liquid`);
++  const targetDir = outDir ?? dirname(specFile);
++  mkdirSync(targetDir, { recursive: true });
++  const outPath = join(targetDir, `${spec.meta.slug}.liquid`);
+   writeFileSync(outPath, output);
+   console.log(`Scaffolded ${outPath}`);
+   return 0;
+diff --git a/packages/cli/src/lib/spec-loader.js b/packages/cli/src/lib/spec-loader.js
+index 27d23cd..d897921 100644
+--- a/packages/cli/src/lib/spec-loader.js
++++ b/packages/cli/src/lib/spec-loader.js
+@@ -4,12 +4,11 @@ import { dirname, join } from "node:path";
+ import { parse } from "yaml";
+ import Ajv from "ajv";
+ 
++// Inside packages/cli/ so the npm `files` whitelist ships it (issue #1).
+ const schemaPath = join(
+   dirname(fileURLToPath(import.meta.url)),
+   "..",
+   "..",
+-  "..",
+-  "..",
+   "spec",
+   "section-spec.schema.json"
+ );
+diff --git a/templates/.gitkeep b/packages/cli/templates/.gitkeep
+similarity index 100%
+rename from templates/.gitkeep
+rename to packages/cli/templates/.gitkeep
+diff --git a/templates/hero/scaffold.liquid b/packages/cli/templates/hero/scaffold.liquid
+similarity index 100%
+rename from templates/hero/scaffold.liquid
+rename to packages/cli/templates/hero/scaffold.liquid
+diff --git a/packages/cli/test/cli-e2e.test.mjs b/packages/cli/test/cli-e2e.test.mjs
+index f8988d5..de95032 100644
+--- a/packages/cli/test/cli-e2e.test.mjs
++++ b/packages/cli/test/cli-e2e.test.mjs
+@@ -1,6 +1,8 @@
+ import { test } from "node:test";
+ import assert from "node:assert/strict";
+ import { execFileSync } from "node:child_process";
++import { existsSync, mkdtempSync, rmSync } from "node:fs";
++import { tmpdir } from "node:os";
+ import { fileURLToPath } from "node:url";
+ import { dirname, join } from "node:path";
+ 
+@@ -43,11 +45,29 @@ test("lint refuses non-.liquid files", () => {
+ 
+ test("spec validate exits 1 on invalid yaml input", () => {
+   assert.equal(
+-    run(["spec", "validate", join("spec", "section-spec.schema.json")]).code,
++    run([
++      "spec",
++      "validate",
++      join("packages", "cli", "spec", "section-spec.schema.json"),
++    ]).code,
+     1
+   );
+ });
+ 
++test("scaffold creates the -o output directory when it does not exist", (t) => {
++  const tmp = mkdtempSync(join(tmpdir(), "sectionkit-scaffold-"));
++  t.after(() => rmSync(tmp, { recursive: true, force: true }));
++  const outDir = join(tmp, "does", "not", "exist");
++  const { code, stdout } = run([
++    "scaffold",
++    join("examples", "hero", "spec.yaml"),
++    "-o",
++    outDir,
++  ]);
++  assert.equal(code, 0, stdout);
++  assert.ok(existsSync(join(outDir, "aurora-hero.liquid")));
++});
++
+ test("unknown command exits 2", () => {
+   assert.equal(run(["frobnicate"]).code, 2);
+ });

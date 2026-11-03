@@ -1,0 +1,87 @@
+# section-spec/v0.1
+meta:
+  name: Candle Hero
+  slug: candle-hero
+  family: hero
+  target: section
+  version: 0.1.0
+
+source:
+  brief: >-
+    Hero section for a candle brand. Warm, atmospheric imagery, a large
+    headline, short supporting line, and exactly one CTA leading shoppers
+    into the catalog.
+
+design_read: >-
+  Warm and hushed — candlelit imagery under a soft dark overlay, an unhurried
+  serif-leaning headline, plenty of breathing room, one quiet inviting CTA.
+
+commerce_intent:
+  purpose: convert
+  buy_path: cta_link
+
+content:
+  hierarchy:
+    - { role: eyebrow, required: false }
+    - { role: heading, required: true }
+    - { role: body, required: false }
+    - { role: cta, required: true }
+    - { role: media, required: true }
+  settings:
+    - { id: eyebrow, type: text, default: "Hand-poured in small batches" }
+    - { id: heading, type: text, default: "Light the evening slowly" }
+    - id: heading_size_desktop
+      type: range
+      default: 64
+      bounds: { min: 32, max: 96, step: 4 }
+    - id: heading_size_mobile
+      type: range
+      default: 40
+      bounds: { min: 24, max: 64, step: 4 }
+    - {
+        id: body,
+        type: textarea,
+        default: "Soy-wax candles scented for the quiet hours.",
+      }
+    - { id: cta_label, type: text, default: "Shop candles" }
+    - { id: cta_link, type: url }
+    - { id: background_image, type: image_picker, label: "Background image" }
+    - id: overlay_opacity
+      type: range
+      default: 45
+      bounds: { min: 0, max: 80, step: 5 }
+  blocks: []
+
+layout:
+  container: full-bleed
+  responsive: { mobile_first: true, breakpoints: [750] }
+
+typography:
+  posture: shopify_font_picker
+  scale: { heading_desktop: 64, heading_mobile: 40 }
+
+background:
+  types_exposed: [image, solid]
+
+accessibility:
+  reduced_motion: required
+  contrast_notes: >-
+    Dark overlay (default 45%) keeps light text at 4.5:1 or better over warm
+    candlelit imagery.
+
+motion:
+  allowed: true
+  kind: css-reveal
+  triggers: [viewport]
+  duration: slow
+  easing: ease-out
+
+performance:
+  image_policy: hero image eager with explicit width/height
+  js_budget_kb: 0
+
+assumptions:
+  - Exactly one CTA, linking to a collection or landing page chosen by the merchant
+  - Default overlay is warm black at 45% to protect contrast on bright flame imagery
+  - Media is a merchant-uploaded image placeholder; no stock copy or imagery baked in
+open_questions: []

@@ -1,0 +1,6 @@
+node_modules/
+dist/
+plans/
+.claude/skills/
+.agents/
+package-lock.json

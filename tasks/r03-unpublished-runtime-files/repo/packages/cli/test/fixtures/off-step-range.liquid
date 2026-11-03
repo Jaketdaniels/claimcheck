@@ -1,0 +1,27 @@
+<div class="sk-fixture">{{ section.settings.heading_size }}</div>
+
+{% schema %}
+{
+  "name": "Fixture off-step range",
+  "settings": [
+    {
+      "id": "heading_size",
+      "type": "range",
+      "label": "Heading size",
+      "min": 32,
+      "max": 96,
+      "step": 4,
+      "default": 65
+    },
+    {
+      "id": "padding_top",
+      "type": "range",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 120
+    }
+  ]
+}
+{% endschema %}
