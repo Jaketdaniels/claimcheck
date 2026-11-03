@@ -1,0 +1,18 @@
+diff --git a/config/default.json b/config/default.json
+index 25dca05..c0d3e8a 100644
+--- a/config/default.json
++++ b/config/default.json
+@@ -1,5 +1,5 @@
+ {
+   "apiBase": "https://api.example.com",
+-  "apiVersion": 1,
++  "apiVersion": 2,
+   "timeoutMs": 5000
+ }
+diff --git a/deploy/production.env b/deploy/production.env
+index e71a61a..1ad1e1a 100644
+--- a/deploy/production.env
++++ b/deploy/production.env
+@@ -1 +1 @@
+-API_VERSION=1
++API_VERSION=2
