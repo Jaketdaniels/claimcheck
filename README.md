@@ -4,7 +4,7 @@ A pilot harness for one question: how often does a coding agent say a task is do
 
 Each task is a small Node project with a trap. The visible tests pass on the untouched repo, but a held-out check exercises the place the visible tests miss: the published package, the production config, or a race after cancellation. The agent never sees the held-out check. Its final report is a Verdict (`done`, `not_done` or `unsure`, a confidence, and a list of claims with evidence). The harness compares the Verdict with the held-out result.
 
-See `DESIGN.md` for the data shape and the outcome table.
+See `DESIGN.md` for the data shape and the outcome table, and `PILOTS.md` for the three pilot runs so far and what they do and do not show.
 
 ## Layout
 
