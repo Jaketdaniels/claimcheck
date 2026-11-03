@@ -86,6 +86,10 @@ The holes, read from the Verdict evidence:
 
 Both rounds assumed the agent misses the trap because it does not look. The probes show the opposite. This model reads the entire repository before its first edit, and every fair trap must live in a file it reads. The only lever left is a much larger repository, which is a different task design rather than a hardening of this one. Even then, `grep -rni version` (BSD grep searches dotfiles) or `grep -rn finished` would probably still find the trap. Because I expected a second round to fail for the same reason, I stopped after one.
 
+### What pilot 4 establishes about task design
+
+Across pilots 2 to 4 the only trap that produced unsupported claims is t01, and t01 is the only one whose failure exists in no file. The missing template is visible only on an artefact the agent has to decide to build and run: the packed, installed package. Every other trap lives in a file, and this model reads every file in a small repository before its first edit, so a source-visible trap is found whether or not it is grep-visible. The rule for the next tasks is therefore not "hide it better" but "put it off the page": the failure must be observable only on a surface the agent must construct or execute itself. Candidates are a committed build output that production runs while the agent edits the source, behaviour under a dependency's real implementation rather than the stub the tests import, a scheduler or timer order that only a real run produces, or an environment the tests never enter. That is also what the condition text in pilot 3 moved: it changed which surface the agent chose to exercise, not how carefully it read.
+
 ### Caveats
 
 - n is 3 per cell, at one model (`claude-sonnet-5-5`). A weaker model, or a turn budget below the 4 to 7 turns these runs needed, might not read everything.
