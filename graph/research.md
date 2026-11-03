@@ -35,6 +35,18 @@ flowchart LR
   n_f_hard_ceiling["f-hard-ceiling<br/>finding"]
   n_f_off_the_page["f-off-the-page<br/>finding"]
   n_c_reads_everything["c-reads-everything<br/>caveat"]
+  n_r01_esm_extensionless_imports["r01-esm-extensionless-imports<br/>task"]
+  n_r02_runtime_dep_in_devdeps["r02-runtime-dep-in-devdeps<br/>task"]
+  n_r03_unpublished_runtime_files["r03-unpublished-runtime-files<br/>task"]
+  n_real_check["real-check<br/>pilot"]
+  n_pilot_5_real["pilot-5-real<br/>pilot"]
+  n_f_real_sourcing["f-real-sourcing<br/>finding"]
+  n_f_real_unsupported["f-real-unsupported<br/>finding"]
+  n_f_real_disclosure["f-real-disclosure<br/>finding"]
+  n_f_real_no_disclosure["f-real-no-disclosure<br/>finding"]
+  n_c_scope_delivery["c-scope-delivery<br/>caveat"]
+  n_c_packaging_only["c-packaging-only<br/>caveat"]
+  n_claim_real_paragraph["claim-real-paragraph<br/>claim"]
   n_baseline -->|"tests"| n_h1
   n_generic_verify -->|"tests"| n_h1
   n_structured_evidence -->|"tests"| n_h1
@@ -90,4 +102,32 @@ flowchart LR
   n_f_off_the_page -->|"evidenced-by"| n_hard_check
   n_f_off_the_page -->|"qualifies"| n_h1
   n_f_off_the_page -->|"limited-by"| n_c_reads_everything
+  n_real_check -->|"ran"| n_r01_esm_extensionless_imports
+  n_pilot_5_real -->|"ran"| n_r01_esm_extensionless_imports
+  n_real_check -->|"ran"| n_r02_runtime_dep_in_devdeps
+  n_pilot_5_real -->|"ran"| n_r02_runtime_dep_in_devdeps
+  n_real_check -->|"ran"| n_r03_unpublished_runtime_files
+  n_pilot_5_real -->|"ran"| n_r03_unpublished_runtime_files
+  n_real_check -->|"ran"| n_baseline
+  n_pilot_5_real -->|"ran"| n_baseline
+  n_pilot_5_real -->|"ran"| n_generic_verify
+  n_pilot_5_real -->|"ran"| n_structured_evidence
+  n_f_real_sourcing -->|"evidenced-by"| n_real_check
+  n_f_real_sourcing -->|"qualifies"| n_h1
+  n_f_real_sourcing -->|"limited-by"| n_c_small_n
+  n_f_real_unsupported -->|"evidenced-by"| n_pilot_5_real
+  n_f_real_unsupported -->|"contradicts"| n_h1
+  n_f_real_unsupported -->|"limited-by"| n_c_small_n
+  n_f_real_unsupported -->|"limited-by"| n_c_one_model
+  n_f_real_unsupported -->|"limited-by"| n_c_scope_delivery
+  n_f_real_unsupported -->|"limited-by"| n_c_packaging_only
+  n_f_real_disclosure -->|"evidenced-by"| n_pilot_5_real
+  n_f_real_disclosure -->|"qualifies"| n_h1
+  n_f_real_disclosure -->|"limited-by"| n_c_scope_delivery
+  n_f_real_disclosure -->|"limited-by"| n_c_small_n
+  n_f_real_no_disclosure -->|"evidenced-by"| n_pilot_5_real
+  n_f_real_no_disclosure -->|"qualifies"| n_h1
+  n_f_real_no_disclosure -->|"limited-by"| n_c_small_n
+  n_f_real_unsupported -->|"cited-in"| n_claim_real_paragraph
+  n_f_real_disclosure -->|"cited-in"| n_claim_real_paragraph
 ```
