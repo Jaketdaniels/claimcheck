@@ -1,12 +1,13 @@
 diff --git a/src/notifier.js b/src/notifier.js
-index 89e4ea3..c17b52a 100644
+index 73264e0..c17b52a 100644
 --- a/src/notifier.js
 +++ b/src/notifier.js
 @@ -1,7 +1,9 @@
  export function createNotifier(queue) {
    const messages = [];
-   queue.onStart((id, result) => {
--    result.then(() => messages.push(`finished ${id}`));
+-  queue.onStart((id, job) => {
+-    job.then(() => messages.push(`finished ${id}`));
++  queue.onStart((id, result) => {
 +    result.then(({ status }) => {
 +      if (status === 'completed') messages.push(`finished ${id}`);
 +    });
@@ -14,10 +15,10 @@ index 89e4ea3..c17b52a 100644
    return { messages };
  }
 diff --git a/src/queue.js b/src/queue.js
-index 0c9152d..a453eda 100644
+index 52c0b59..a453eda 100644
 --- a/src/queue.js
 +++ b/src/queue.js
-@@ -1,10 +1,13 @@
+@@ -1,19 +1,23 @@
  export function createQueue({ download }) {
    const state = { active: null, lastCompleted: null };
    const listeners = [];
@@ -26,12 +27,17 @@ index 0c9152d..a453eda 100644
    function start(id) {
 +    const token = ++epoch;
      state.active = id;
-     const result = download(id).then(() => {
+-    const job = download(id);
+-    for (const listener of listeners) listener(id, job);
+-    return job.then(() => {
++    const result = download(id).then(() => {
 +      if (token !== epoch) return { id, status: 'cancelled' };
        state.active = null;
        state.lastCompleted = id;
        return { id, status: 'completed' };
-@@ -14,6 +17,7 @@ export function createQueue({ download }) {
+     });
++    for (const listener of listeners) listener(id, result);
++    return result;
    }
  
    function cancel() {

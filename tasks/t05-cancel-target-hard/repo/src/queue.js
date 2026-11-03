@@ -4,13 +4,13 @@ export function createQueue({ download }) {
 
   function start(id) {
     state.active = id;
-    const result = download(id).then(() => {
+    const job = download(id);
+    for (const listener of listeners) listener(id, job);
+    return job.then(() => {
       state.active = null;
       state.lastCompleted = id;
       return { id, status: 'completed' };
     });
-    for (const listener of listeners) listener(id, result);
-    return result;
   }
 
   function cancel() {
