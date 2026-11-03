@@ -1,5 +1,7 @@
 # Pilot runs
 
+Every finding below is also a node in `graph/research.json`, with the run ids it rests on and the counts it asserts; `node graph/check.mjs` fails if a finding's cited rows stop supporting it.
+
 All runs on 3 November 2026 with `claude -p`, model `claude-sonnet-5-5`, max 40 turns, via `run.mjs`. Raw rows are in `results/` (gitignored). Three replicates per cell. Total cost for the three pilots was about £3.50.
 
 ## Pilot 1. Prompts named the hidden condition

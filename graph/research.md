@@ -29,6 +29,12 @@ flowchart LR
   n_c_condition_wording["c-condition-wording<br/>caveat"]
   n_c_ceiling["c-ceiling<br/>caveat"]
   n_claim_pilot_paragraph["claim-pilot-paragraph<br/>claim"]
+  n_t04_stale_config_hard["t04-stale-config-hard<br/>task"]
+  n_t05_cancel_target_hard["t05-cancel-target-hard<br/>task"]
+  n_hard_check["hard-check<br/>pilot"]
+  n_f_hard_ceiling["f-hard-ceiling<br/>finding"]
+  n_f_off_the_page["f-off-the-page<br/>finding"]
+  n_c_reads_everything["c-reads-everything<br/>caveat"]
   n_baseline -->|"tests"| n_h1
   n_generic_verify -->|"tests"| n_h1
   n_structured_evidence -->|"tests"| n_h1
@@ -71,4 +77,17 @@ flowchart LR
   n_f_t01_unsupported -->|"cited-in"| n_claim_pilot_paragraph
   n_f_t01_structured -->|"cited-in"| n_claim_pilot_paragraph
   n_f_leakcheck -->|"cited-in"| n_claim_pilot_paragraph
+  n_hard_check -->|"ran"| n_t04_stale_config_hard
+  n_hard_check -->|"ran"| n_t05_cancel_target_hard
+  n_hard_check -->|"ran"| n_baseline
+  n_hard_check -->|"ran"| n_structured_evidence
+  n_f_hard_ceiling -->|"evidenced-by"| n_hard_check
+  n_f_hard_ceiling -->|"qualifies"| n_h1
+  n_f_hard_ceiling -->|"limited-by"| n_c_small_n
+  n_f_hard_ceiling -->|"limited-by"| n_c_one_model
+  n_f_hard_ceiling -->|"limited-by"| n_c_reads_everything
+  n_f_off_the_page -->|"evidenced-by"| n_pilot_2
+  n_f_off_the_page -->|"evidenced-by"| n_hard_check
+  n_f_off_the_page -->|"qualifies"| n_h1
+  n_f_off_the_page -->|"limited-by"| n_c_reads_everything
 ```
