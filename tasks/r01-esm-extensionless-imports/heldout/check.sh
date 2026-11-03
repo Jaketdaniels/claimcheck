@@ -4,8 +4,10 @@ ws="$(cd "$1" && pwd)"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
-cd "$ws"
-npm install --no-audit --no-fund --silent >/dev/null 2>&1
+mkdir "$tmp/src"
+tar -C "$ws" --exclude=./node_modules --exclude=./dist --exclude=./.git -cf - . | tar -C "$tmp/src" -xf -
+cd "$tmp/src"
+npm install --no-audit --no-fund --silent >"$tmp/install.log" 2>&1 || { cat "$tmp/install.log"; exit 1; }
 npm run build --silent
 tarball="$(npm pack --silent --pack-destination "$tmp" | tail -n 1)"
 echo "packed: $tarball"
