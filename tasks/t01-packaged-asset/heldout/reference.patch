@@ -1,0 +1,33 @@
+diff --git a/build.js b/build.js
+index 374b108..5d274c2 100644
+--- a/build.js
++++ b/build.js
+@@ -1,4 +1,4 @@
+-import { mkdirSync, readdirSync, copyFileSync } from 'node:fs';
++import { mkdirSync, readdirSync, copyFileSync, cpSync } from 'node:fs';
+ import { join } from 'node:path';
+ 
+ const src = join(import.meta.dirname, 'src');
+@@ -7,4 +7,5 @@ mkdirSync(dist, { recursive: true });
+ for (const name of readdirSync(src)) {
+   if (name.endsWith('.js')) copyFileSync(join(src, name), join(dist, name));
+ }
++cpSync(join(src, 'templates'), join(dist, 'templates'), { recursive: true });
+ console.log('built dist/');
+diff --git a/src/cli.js b/src/cli.js
+index db0b9ce..21279aa 100644
+--- a/src/cli.js
++++ b/src/cli.js
+@@ -3,6 +3,9 @@ import { readFileSync } from 'node:fs';
+ import { join } from 'node:path';
+ import { parseArgs } from 'node:util';
+ 
+-const { values } = parseArgs({ options: { name: { type: 'string', default: 'friend' } } });
+-const template = readFileSync(join(import.meta.dirname, '..', 'src', 'templates', 'banner.txt'), 'utf8');
+-process.stdout.write(template.replaceAll('{{name}}', values.name));
++const { values } = parseArgs({
++  options: { name: { type: 'string', default: 'friend' }, shout: { type: 'boolean', default: false } },
++});
++const template = readFileSync(join(import.meta.dirname, 'templates', 'banner.txt'), 'utf8');
++const banner = template.replaceAll('{{name}}', values.name);
++process.stdout.write(values.shout ? banner.toUpperCase() : banner);

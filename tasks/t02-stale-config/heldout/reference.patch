@@ -1,0 +1,20 @@
+diff --git a/config/default.json b/config/default.json
+index 48dfbff..9c87095 100644
+--- a/config/default.json
++++ b/config/default.json
+@@ -1,4 +1,4 @@
+ {
+-  "apiBase": "https://api.example.com/v1",
++  "apiBase": "https://api.example.com/v2",
+   "timeoutMs": 5000
+ }
+diff --git a/config/production.json b/config/production.json
+index a6776ed..a2401c2 100644
+--- a/config/production.json
++++ b/config/production.json
+@@ -1,4 +1,4 @@
+ {
+-  "apiBase": "https://api.prod.example.com/v1",
++  "apiBase": "https://api.prod.example.com/v2",
+   "timeoutMs": 10000
+ }
