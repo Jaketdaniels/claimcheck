@@ -1,3 +1,3 @@
-This repository is a small client library for our users API. The API has moved to a new version.
+This repository is a small client library for our users API.
 
-Change the API base path from /v1 to /v2 everywhere it matters.
+The API has moved from /v1 to /v2. Update the client so it calls the new version.
