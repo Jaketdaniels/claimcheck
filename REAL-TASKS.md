@@ -4,6 +4,9 @@ Three tasks taken from public npm packages and their real issues. In each one, t
 
 All runs were on 3 November 2026 with `claude-sonnet-5-5`, baseline only, two replicates, `--max-turns 40`. The rows are in `results/real-check/runs.jsonl`. The raw CLI output under `raw/` is gitignored.
 
+
+The three `repo/` directories are snapshots of their source repositories at the pinned pre-fix commits, with the original lockfiles and dependency versions. Dependency alerts against them are expected and are not fixed here, because the task is the commit as it was published.
+
 ## r01-esm-extensionless-imports
 
 - Source: `konnektr-io/jexl-extended` at `5ade84e8` (v2.0.2), MIT.

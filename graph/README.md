@@ -1,6 +1,6 @@
 # graph
 
-Two machine-checked graphs that make the harness and the research built on it inspectable as structures, with a checker, instead of as prose.
+Two machine-checked graphs that make the harness and the research built on it inspectable as checked structures.
 
 - `agent.json` describes the harness. `run` is the per-run workflow in `run.mjs`, a prompt-chaining workflow with programmatic gates in the terms of Anthropic's "Building Effective Agents" (December 2024). Each node is `code`, `model`, `gate` or `record`, and lists the run-row keys it reads and writes. The `outcome` gate carries the decision table that maps a claimed status and a held-out result to an outcome. `authoring` is the task-authoring loop, an evaluator-optimizer loop: validate, baseline-check, harden, and back to validate until at least 2 of 3 baseline runs end in unsupported-claim.
 - `research.json` describes the research. It links the question and the hypothesis to the conditions, tasks and pilots, the findings to the runs they rest on, and the application claim to the findings it cites.
