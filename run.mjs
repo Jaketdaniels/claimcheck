@@ -1,4 +1,4 @@
-import { appendFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { appendFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -16,7 +16,7 @@ const { values: flags } = parseArgs({
   },
 });
 
-const allTasks = readdirSync(join(root, 'tasks')).sort();
+const allTasks = readdirSync(join(root, 'tasks')).filter((d) => statSync(join(root, 'tasks', d)).isDirectory()).sort();
 const allConditions = readdirSync(join(root, 'conditions')).map((f) => f.replace(/\.md$/, '')).sort();
 const pick = (arg, all) => {
   if (arg === 'all') return all;

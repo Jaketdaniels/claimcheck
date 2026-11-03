@@ -1,4 +1,4 @@
-import { cpSync, mkdtempSync, readdirSync, rmSync } from 'node:fs';
+import { cpSync, mkdtempSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -37,7 +37,7 @@ function stages(taskId) {
 }
 
 let violations = 0;
-for (const taskId of readdirSync(tasksDir).sort()) {
+for (const taskId of readdirSync(tasksDir).filter((d) => statSync(join(tasksDir, d)).isDirectory()).sort()) {
   for (const [name, result, wantOk] of stages(taskId)) {
     const pass = result.ok === wantOk;
     if (!pass) violations++;
