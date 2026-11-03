@@ -1,0 +1,14 @@
+{
+  "failureClass": "runtime-dependency-in-devdependencies",
+  "version": 1,
+  "source": {
+    "repo": "nexus-substrate/nexus-toolkit",
+    "commit": "d8fd9e5f",
+    "issue": "https://github.com/nexus-substrate/nexus-toolkit/issues/11",
+    "promptIssue": "https://github.com/nexus-substrate/nexus-toolkit/issues/12",
+    "fixCommit": "ff8ee185",
+    "promptFixCommit": "003db024",
+    "licence": "MIT"
+  },
+  "adaptations": ["package.json gains a pretest script that runs npm install when node_modules is missing, so validate-tasks.mjs can run the vitest suite in an uninstalled copy"]
+}

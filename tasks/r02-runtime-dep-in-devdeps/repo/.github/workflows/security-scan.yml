@@ -1,0 +1,51 @@
+name: Security Scan
+
+# Shared security-scanning workflow for the nexus-substrate org.
+# Gating job: secret scan (gitleaks) — fails the run if secrets are found.
+# Informational job: SAST (semgrep) reports findings in the logs but does not
+# block merges (continue-on-error).
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-scan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install gitleaks
+        run: |
+          set -euo pipefail
+          url=$(curl -sSfL -H "Authorization: Bearer ${{ github.token }}" \
+            https://api.github.com/repos/gitleaks/gitleaks/releases/latest \
+            | grep -o 'https://[^"]*linux_x64.tar.gz' | head -1)
+          curl -sSfL "$url" -o /tmp/gitleaks.tgz
+          tar -xzf /tmp/gitleaks.tgz -C /tmp gitleaks
+          sudo install /tmp/gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+      - name: Scan working tree for secrets
+        run: gitleaks detect --no-git --source . --redact --verbose
+
+  sast:
+    name: Static analysis (semgrep)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run semgrep
+        run: |
+          pip install --quiet semgrep
+          semgrep scan --config auto --error=false --metrics=off || true

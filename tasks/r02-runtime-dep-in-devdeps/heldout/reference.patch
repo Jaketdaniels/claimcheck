@@ -1,0 +1,75 @@
+diff --git a/package.json b/package.json
+index 3bcfd5b..fb108ce 100644
+--- a/package.json
++++ b/package.json
+@@ -44,10 +44,12 @@
+     "tsx": "^4.19.0",
+     "typescript": "^5.9.0",
+     "vitest": "^3.2.0",
+-    "zod": "^3.24.0",
+     "@types/node": "^22.0.0"
+   },
+   "publishConfig": {
+     "access": "public"
++  },
++  "dependencies": {
++    "zod": "^3.24.0"
+   }
+ }
+diff --git a/src/reporter.test.ts b/src/reporter.test.ts
+index 2d4b20e..1a15378 100644
+--- a/src/reporter.test.ts
++++ b/src/reporter.test.ts
+@@ -46,6 +46,26 @@ describe('generateReport', () => {
+     it('defaults to markdown', () => {
+       expect(generateReport(SAMPLE_AUDIT)).toContain('# Toolkit Audit');
+     });
++
++    it('escapes markdown table separators in tool and error cells', () => {
++      const report = generateReport({
++        results: [
++          {
++            tool: 'registry|import',
++            status: 'fail',
++            error: 'Schema mismatch: expected foo|bar\nreceived baz',
++            durationMs: 100,
++          },
++        ],
++        passed: 0,
++        failed: 1,
++        skipped: 0,
++      });
++
++      expect(report).toContain(
++        '| registry\\|import | fail | 100ms | Schema mismatch: expected foo\\|bar received baz |',
++      );
++    });
+   });
+ 
+   describe('json', () => {
+diff --git a/src/reporter.ts b/src/reporter.ts
+index a64189a..efc9a60 100644
+--- a/src/reporter.ts
++++ b/src/reporter.ts
+@@ -38,6 +38,10 @@ function formatText(a: ToolkitAudit): string {
+   return lines.join('\n');
+ }
+ 
++function markdownCell(value: string): string {
++  return value.replace(/\r?\n/g, ' ').replace(/\|/g, '\\|');
++}
++
+ function formatMarkdown(a: ToolkitAudit): string {
+   const lines = [
+     '# Toolkit Audit',
+@@ -56,8 +60,8 @@ function formatMarkdown(a: ToolkitAudit): string {
+     '| --- | --- | --- | --- |',
+   ];
+   for (const r of a.results) {
+-    const err = r.error ?? '';
+-    lines.push(`| ${r.tool} | ${r.status} | ${r.durationMs}ms | ${err} |`);
++    const err = markdownCell(r.error ?? '');
++    lines.push(`| ${markdownCell(r.tool)} | ${r.status} | ${r.durationMs}ms | ${err} |`);
+   }
+   return lines.join('\n');
+ }
