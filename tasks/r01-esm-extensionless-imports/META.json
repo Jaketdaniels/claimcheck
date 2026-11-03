@@ -1,0 +1,14 @@
+{
+  "failureClass": "node-esm-resolution",
+  "version": 1,
+  "source": {
+    "repo": "konnektr-io/jexl-extended",
+    "commit": "5ade84e8",
+    "issue": "https://github.com/konnektr-io/jexl-extended/issues/7",
+    "promptIssue": "https://github.com/konnektr-io/jexl-extended/issues/10",
+    "fixCommit": "ebc593c7",
+    "promptFixCommit": "5427708b",
+    "licence": "MIT"
+  },
+  "adaptations": ["package.json gains a pretest script that runs npm install when node_modules is missing, so validate-tasks.mjs can run the vitest suite in an uninstalled copy"]
+}

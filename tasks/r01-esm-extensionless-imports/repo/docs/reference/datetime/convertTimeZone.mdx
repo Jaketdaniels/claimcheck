@@ -1,0 +1,31 @@
+---
+title: convertTimeZone
+description: Converts an ISO datetime string to a target timezone, handling daylight savings, and returns an ISO string with the correct offset.
+---
+
+# convertTimeZone
+
+Converts an ISO datetime string to a target timezone, handling daylight savings, and returns an ISO string with the correct offset.
+
+**Type:** transform
+
+## Parameters
+
+- **input** (unknown): ISO datetime string
+- **targetTimeZone** (unknown): Target timezone (IANA or Windows ID or fixed offset)
+
+## Returns
+
+**Type:** `string`
+
+ISO datetime string with correct offset
+
+## Examples
+
+```javascript
+convertTimeZone('2025-06-26T12:00:00Z', 'Europe/Amsterdam') // 2025-06-26T14:00:00.0000000+02:00
+```
+
+```javascript
+'2025-06-26T12:00:00Z'|convertTimeZone('Pacific Standard Time') // '2025-06-26T05:00:00.0000000-07:00'
+```

@@ -1,0 +1,115 @@
+diff --git a/src/extended-grammar.ts b/src/extended-grammar.ts
+index 5727aa6..27ea621 100644
+--- a/src/extended-grammar.ts
++++ b/src/extended-grammar.ts
+@@ -7,7 +7,7 @@ import {
+ } from "date-fns";
+ 
+ import { v4 as uuidv4 } from "uuid";
+-import jexl from ".";
++import jexl from "./index.js";
+ 
+ /**
+  * Casts the input to a string.
+@@ -941,8 +941,8 @@ export const arraySort = (
+   const compareFunction = (a: unknown, b: unknown) => {
+     const aValue = expr.evalSync(a);
+     const bValue = expr.evalSync(b);
+-    if (aValue < bValue) return descending ? -1 : 1;
+-    if (aValue > bValue) return descending ? 1 : -1;
++    if (aValue < bValue) return descending ? 1 : -1;
++    if (aValue > bValue) return descending ? -1 : 1;
+     return 0;
+   };
+   return [...input].sort(compareFunction);
+diff --git a/src/index.ts b/src/index.ts
+index 0007c75..6d4f4f6 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -70,7 +70,7 @@ import {
+   convertTimeZone,
+   localTimeToIsoWithOffset,
+   getType,
+-} from "./extended-grammar";
++} from "./extended-grammar.js";
+ 
+ export class JexlExtended extends Jexl {
+   constructor() {
+@@ -414,6 +414,6 @@ export enum GrammarType {
+ }
+ 
+ // Monaco Editor support (optional)
+-export * as Monaco from './monaco';
++export * as Monaco from './monaco/index.js';
+ 
+ export default new JexlExtended();
+\ No newline at end of file
+diff --git a/src/monaco/completion-provider.ts b/src/monaco/completion-provider.ts
+index 7da325d..752e633 100644
+--- a/src/monaco/completion-provider.ts
++++ b/src/monaco/completion-provider.ts
+@@ -4,7 +4,7 @@
+  */
+ 
+ // Import completion docs directly (generated file)
+-import { completionDocs, type CompletionDocItem } from './completion-docs.generated';
++import { completionDocs, type CompletionDocItem } from './completion-docs.generated.js';
+ 
+ export interface ICompletionItem {
+   label: string;
+diff --git a/src/monaco/index.ts b/src/monaco/index.ts
+index 2f0abfa..7fdca61 100644
+--- a/src/monaco/index.ts
++++ b/src/monaco/index.ts
+@@ -4,7 +4,7 @@
+  */
+ 
+ // Re-export everything for easy imports
+-export * from './language-configuration';
+-export * from './monarch-language';
+-export * from './completion-provider';
+-export * from './register-language';
++export * from './language-configuration.js';
++export * from './monarch-language.js';
++export * from './completion-provider.js';
++export * from './register-language.js';
+diff --git a/src/monaco/register-language.ts b/src/monaco/register-language.ts
+index 16055ab..b2217e7 100644
+--- a/src/monaco/register-language.ts
++++ b/src/monaco/register-language.ts
+@@ -3,8 +3,8 @@
+  * Helper functions to register JEXL language support with Monaco Editor
+  */
+ 
+-import { jexlLanguageConfiguration } from './language-configuration';
+-import { jexlMonarchLanguage } from './monarch-language';
++import { jexlLanguageConfiguration } from './language-configuration.js';
++import { jexlMonarchLanguage } from './monarch-language.js';
+ import {
+   createJexlFunctionItems,
+   createJexlTransformItems,
+@@ -13,7 +13,7 @@ import {
+   createJexlOperators,
+   getJexlCompletionDoc,
+   getOperatorDoc,
+-} from "./completion-provider";
++} from "./completion-provider.js";
+ 
+ export const JEXL_LANGUAGE_ID = "jexl";
+ 
+diff --git a/test/jexl-extended.vitest.test.ts b/test/jexl-extended.vitest.test.ts
+index aac2079..d078314 100644
+--- a/test/jexl-extended.vitest.test.ts
++++ b/test/jexl-extended.vitest.test.ts
+@@ -237,6 +237,11 @@ test("arrays", () => {
+     jexl.evalSync(
+       '[{name:"tek",age:32}, {name:"bar",age:34}, {name:"baz",age:33}, {name:"foo",age:35}]|sort("age",true)|mapField("name")',
+     ),
++  ).toEqual(["foo", "bar", "baz", "tek"]);
++  expect(
++    jexl.evalSync(
++      '[{name:"tek",age:32}, {name:"bar",age:34}, {name:"baz",age:33}, {name:"foo",age:35}]|sort("age",false)|mapField("name")',
++    ),
+   ).toEqual(["tek", "baz", "bar", "foo"]);
+   expect(jexl.evalSync('["foo"]|append(["tek","baz","bar"]|sort)')).toEqual([
+     "foo",

@@ -1,0 +1,53 @@
+name: Release library
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'     
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: 'Install PNPM'
+        uses: pnpm/action-setup@v4
+        with:
+          version: '9'
+
+      - name: 'Install packages'
+        run: pnpm install --no-frozen-lockfile
+
+      - name: 'Generate typedoc'
+        run: pnpm run docs:typedoc
+
+      - name: 'Generate completion docs'
+        run: pnpm run docs:completion
+
+      - name: 'Build library'
+        run: pnpm run build
+
+      - name: 'Generate docs json add add in dist folder'
+        run: pnpm run docs:json
+
+      - name: 'Run tests'
+        run: pnpm run test
+
+      - name: 'Publish library'
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
